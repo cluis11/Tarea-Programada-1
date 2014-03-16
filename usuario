@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+ 
+int main (int argc,char **argv)
+{
+ 	FILE *fp;
+ 
+ 	char datos[100];
+	char datos1[100];
+	char datos2[100];
+	
+ 
+ 	fp = fopen ( "fichero.txt", "r+" );
+ 
+ 	printf("\nIntrouce el ip: ");
+
+	scanf("%s",&datos);
+	strcat(datos," ");
+
+	printf ("\n Introduce el puerto:" );
+
+	scanf("%s",&datos1);
+	strcat(datos1," ");
+
+	printf ("\n Introduzca el nombre de usuario:");
+
+	scanf("%s",&datos2);
+
+	strcat (datos,datos1);
+	strcat (datos,datos2);
+	
+ 
+ 	fprintf (fp,datos);
+ 
+ 	fclose ( fp );
+
+	printf ("\n",datos);
+ 
+ 	return 0;
+}

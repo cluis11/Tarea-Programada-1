@@ -9,13 +9,13 @@ int main (int argc,char **argv)
 	char datos1[100];
 	char datos2[100];
 	
- 
- 	fp = fopen ( "fichero.txt", "r+" );
+	//a+ lo valida solo
+ 	fp = fopen ( "fichero.txt", "a+" );
  	
  	
- 	//Si el archivo no existe lo crea
+ 	/*Si el archivo no existe lo crea
  	if (!fp)
-		fp = fopen ( "fichero.txt", "a+" );
+		fp = fopen ( "fichero.txt", "a+" );*/
  	
  
  	printf("\nIntrouce el ip: ");

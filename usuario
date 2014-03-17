@@ -11,6 +11,12 @@ int main (int argc,char **argv)
 	
  
  	fp = fopen ( "fichero.txt", "r+" );
+ 	
+ 	
+ 	//Si el archivo no existe lo crea
+ 	if (!fp)
+		fp = fopen ( "fichero.txt", "a+" );
+ 	
  
  	printf("\nIntrouce el ip: ");
 

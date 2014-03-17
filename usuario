@@ -1,11 +1,11 @@
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h>//incluye la libreria estandar de C
+#include <string.h>//incluye una libreria para manejo de strings
  
 int main (int argc,char **argv)
 {
  	FILE *fp;
  
- 	char datos[100];
+ 	char datos[100];//inicializa las variabes para guardar los datos
 	char datos1[100];
 	char datos2[100];
 	
@@ -18,29 +18,30 @@ int main (int argc,char **argv)
 		fp = fopen ( "fichero.txt", "a+" );*/
  	
  
- 	printf("\nIntrouce el ip: ");
+ 	printf("\nIntrouce el ip: ");//mensaje para el usuario
 
-	scanf("%s",&datos);
-	strcat(datos," ");
+	scanf("%s",&datos);//recibe los datos en la memoria
+	strcat(datos," ");//añade un espacio para ordenarlos de mejor forma
 
-	printf ("\n Introduce el puerto:" );
+	printf ("\n Introduce el puerto:" );//mensaje para el usuario
 
-	scanf("%s",&datos1);
-	strcat(datos1," ");
+	scanf("%s",&datos1);//recibe los datos en la memoria
+	strcat(datos1," ");//añade un espacio para ordenarlos de mejor forma
 
-	printf ("\n Introduzca el nombre de usuario:");
+	printf ("\n Introduzca el nombre de usuario:");//mensaje para el usuario
 
-	scanf("%s",&datos2);
+	scanf("%s",&datos2);//recibe los datos en la memoria
 
-	strcat (datos,datos1);
-	strcat (datos,datos2);
+	strcat (datos,datos1);//juntar los datos en una sola linea
+	strcat (datos,datos2);//junta los datos en una sola linea
+	strcat(datos,"\n"); //hace salt de linea en el archivo .txt 
 	
  
- 	fprintf (fp,datos);
+ 	fprintf (fp,datos);//escribe los datos en el archivo txt
  
- 	fclose ( fp );
+ 	fclose ( fp );//cierra el archivo de texto para evitar errores
 
-	printf ("\n",datos);
+	printf ("\n %c",datos);
  
- 	return 0;
+ 	return 0;//retorna 0 si todos lso procesos se completaron de forma correcta
 }

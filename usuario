@@ -18,18 +18,18 @@ int main (int argc,char **argv)
 		fp = fopen ( "fichero.txt", "a+" );*/
  	
  
- 	printf("\nIntrouce el ip: ");//mensaje para el usuario
+ 	printf("\nIntroduzca el nombre de usuario:");//mensaje para el usuario
 
 	scanf("%s",&datos);//recibe los datos en la memoria
 	strcat(datos," ");//añade un espacio para ordenarlos de mejor forma
 
-	printf ("\n Introduce el puerto:" );//mensaje para el usuario
+	printf ("\nIntrouce el ip: " );//mensaje para el usuario
 
 	scanf("%s",&datos1);//recibe los datos en la memoria
 	strcat(datos1," ");//añade un espacio para ordenarlos de mejor forma
 
-	printf ("\n Introduzca el nombre de usuario:");//mensaje para el usuario
-
+	printf ("\nIntroduce el puerto: ");//mensaje para el usuario
+	
 	scanf("%s",&datos2);//recibe los datos en la memoria
 
 	strcat (datos,datos1);//juntar los datos en una sola linea

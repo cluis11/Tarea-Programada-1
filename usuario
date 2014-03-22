@@ -1,47 +1,67 @@
-#include <stdio.h>//incluye la libreria estandar de C
-#include <string.h>//incluye una libreria para manejo de strings
- 
+#include <stdio.h> //incluye la libreria estandar de C
+#include <string.h> //incluye una libreria para manejo de strings
+int Validar_Usuario();
+int Agrega_Usuario();
 int main (int argc,char **argv)
-{
- 	FILE *fp;
- 
- 	char datos[100];//inicializa las variabes para guardar los datos
-	char datos1[100];
-	char datos2[100];
-	
-	//a+ lo valida solo
- 	fp = fopen ( "fichero.txt", "a+" );
- 	
- 	
- 	/*Si el archivo no existe lo crea
- 	if (!fp)
-		fp = fopen ( "fichero.txt", "a+" );*/
- 	
- 
- 	printf("\nIntroduzca el nombre de usuario:");//mensaje para el usuario
+{   Validar_Usuario();
+ 	return 0;
+}
+int Agrega_Usuario(){
+    FILE *fp;
 
-	scanf("%s",&datos);//recibe los datos en la memoria
-	strcat(datos," ");//añade un espacio para ordenarlos de mejor forma
+ 	char ip[100];//inicializa las variabes para guardar los datos
+	char puerto[100];//inicializa las variabes para guardar los datos
+	char usuario[100];//inicializa las variabes para guardar los datos
+
+	//a+ lo valida solo
+ 	fp = fopen ( "fichero.txt", "a+" );//abre el archivo para escirbir en el, si no existe se crea
+
+ 	printf("\nIntroduzca el nombre de usuario(Reconoce mayúsculas):");//mensaje para el usuario
+ 	fflush(stdin);//limpia el buffer de entrada para evitar errores en el manejo de información
+	scanf("%s",&usuario);//recibe los datos en la memoria
+	strcat(usuario," ");//añade un espacio para ordenarlos de mejor forma
 
 	printf ("\nIntrouce el ip: " );//mensaje para el usuario
-
-	scanf("%s",&datos1);//recibe los datos en la memoria
-	strcat(datos1," ");//añade un espacio para ordenarlos de mejor forma
+	fflush(stdin);//limpia el buffer de entrada para evitar errores en el manejo de información
+	scanf("%s",&ip);//recibe los datos en la memoria
+	strcat(ip," ");//añade un espacio para ordenarlos de mejor forma
 
 	printf ("\nIntroduce el puerto: ");//mensaje para el usuario
-	
-	scanf("%s",&datos2);//recibe los datos en la memoria
+        fflush(stdin);//limpia el buffer de entrada para evitar errores en el manejo de información
+	scanf("%s",&puerto);//recibe los datos en la memoria
 
-	strcat (datos,datos1);//juntar los datos en una sola linea
-	strcat (datos,datos2);//junta los datos en una sola linea
-	strcat(datos,"\n"); //hace salt de linea en el archivo .txt 
-	
- 
- 	fprintf (fp,datos);//escribe los datos en el archivo txt
- 
+	strcat (usuario,ip);//juntar los datos en una sola linea
+	strcat (usuario,puerto);//junta los datos en una sola linea
+	strcat(usuario,"\n"); //hace salt de linea en el archivo .txt
+
+
+ 	fprintf (fp,usuario);//escribe los datos en el archivo txt
+
  	fclose ( fp );//cierra el archivo de texto para evitar errores
 
-	printf ("\n %c",datos);
- 
  	return 0;//retorna 0 si todos lso procesos se completaron de forma correcta
+}
+int Validar_Usuario(){
+    FILE *file;//inicia el valor que contendrá el archivo
+    char usuario[100];//inicia variable
+    char ip[100];//inicia variable
+    char puerto[100];//inicia variable
+    printf("Ingrese el nombre de usuario a buscar: ");//mensaje para el usuario
+    scanf("%s",&usuario);//guarda el valor ingresado en la variable usuario
+    char palabra[100];//variable donde se guardará el valor
+    file=fopen("fichero.txt","r");//abre el achivo de texto,
+    if(file==NULL){//si el archivo no es posible abrir
+        printf("Error al abrir el archivo para la lectura");//muestra error en caso de que no se pueda abrir el archivo
+    }
+    while(!feof(file)){//mientras el archivo no llegue al final
+        fscanf(file,"%s",palabra);//lee la primera palabra en el archivo
+        if(strcmp(palabra,usuario)==0){//si el nombre de usuario en el archivo de texto es igual al buscado
+                fscanf(file,"%s",ip);// guarda el siguiente valor en ip
+                fscanf(file,"%s",puerto);//guarda el siguiente valor en puerto
+                break;//termina la funcion para que deje de comparar
+        }else{//si el valor no era el que se buscaba, pasa a la siguiente linea del archivo
+            fscanf(file,"%s",palabra);fscanf(file,"%s",palabra);}//se mueve a la siguiente linea para evitar errores
+    }
+    fclose(file);//cierra el achivo
+    return 0;//retorna 0 si todo se realizó sin errores
 }

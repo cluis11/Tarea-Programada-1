@@ -1,0 +1,363 @@
+#include <stdio.h> //es la biblioteca estándar en C
+#include <string.h> //incluye una libreria para manejo de strings
+#include <stdlib.h>//archivo de cabecera de la biblioteca estándar
+#include <strings.h>//libreria que incluye funciones para el manejo de strings
+#include <sys/socket.h>//libreria principal para el manejo de sockets 
+#include <unistd.h>//es el header file que provee acceso al API POSIX de los sistemas operativos Linux/Unix.
+#include <sys/types.h>//manejo del tipo de datos
+#include <netinet/in.h>//libreria para el manejo de IPs entre otras funciones
+#include <netdb.h>//definiciones para el manejo de operaciones en informacion de la red
+#define ARCHIVO "fichero.txt"
+#define rayas printf("---------------------------------------------------------\n");//macro que incluye un conjunto de lineas para separar los textos
+
+/*--------------------------------------------------------------------------
+Autores: Luis Eladio Castro
+         Randall Jimenez
+         Josue Fernandez
+I Tarea Programada
+----------------------------------------------------------------------------*/
+//Funciones Usadas
+int Validar_Usuario(int boolean,char *_usuario,char *_ip,char * _puerto);//valida que el usuario exista
+int Agrega_Usuario();//funcion que agrega un nuevo usuario
+void Leer_Archivo();//funcion que lee el archivo
+void Imprime();
+int Menu();//funcion del menu del programa, imprime opciones y recibe numeros para estar mas ordenado
+int busca_pos();
+
+typedef struct{
+    char nombre[20];
+    char ip[20];
+    char puerto[20];
+    int largo;
+}Users;
+Users Usuario[20];
+int LARGO=0;
+
+int main (int argc,char **argv){
+    Leer_Archivo();
+    if(LARGO==0) {
+		printf("Su lista de contactos actual esta vacia\n");rayas;rayas;  }
+    else {
+		printf("La cantidad de contactos es de %d\n",LARGO-1);rayas;rayas }
+    int opcion;rayas;
+    char USUARIO[50];//variables que guardaran informacion
+    char IP[50];//variables que guardaran informacion
+    char PUERTO[50];//variables que guardaran informacion
+    char* ptrUSUARIO;//punteros a dichas variables
+    char* ptrIP;//punteros a dichas variables
+    char* ptrPUERTO; //punteros a dichas variables
+    ptrUSUARIO=USUARIO;//se asigna cada puntero a cada variable
+    ptrIP=IP;//se asigna cada puntero a cada variable
+    ptrPUERTO=PUERTO;//se asigna cada puntero a cada variable
+    int flag;
+    while (1){
+		flag=Menu();
+		if (flag==3) break;
+		if (flag==0)break;
+		}
+	if (flag==3){
+		Validar_Usuario(0,ptrUSUARIO,ptrIP,ptrPUERTO);
+		sockets(ptrIP, ptrPUERTO); }
+    return 0;
+}
+
+void Imprime(){
+    FILE *ar;//inicializa a variable
+    ar=fopen(ARCHIVO,"r");//abre e archivo para si lectura
+    char actual[100];//variable que guardará os datos
+    while(!feof(ar)){//mientras el archivo no llegue al final
+        fflush(stdin);//Limpia el buffer de entrada para evitar errores
+        fscanf(ar,"%s",actual);//lee la primera palabra en el archivo
+        printf("Nombre: %s -- ",actual);
+        fflush(stdin);//Limpia el buffer de entrada para evitar errores
+        fscanf(ar,"%s",actual);//lee la primera palabra en el archivo
+        printf("IP: %s -- ",actual);
+        fflush(stdin);//Limpia el buffer de entrada para evitar errores
+        fscanf(ar,"%s",actual);//lee la primera palabra en el archivo
+        printf("Puerto: %s\n",actual);
+    }
+        rayas;//conjunto de lineas que indica que el proceso actual ha finalizado
+}
+
+int Agrega_Usuario(){//funcion que agrega un usuario nuevo
+    FILE *fp;//crea a variabe que alvergara al archivo
+    char ip[100];//inicializa las variabes para guardar los datos
+    char puerto[100];//inicializa las variabes para guardar los datos
+    char usuario[100];//inicializa las variabes para guardar los datos
+
+    fp = fopen ( ARCHIVO, "a" );//abre el archivo para escribir en el, si no existe se crea
+    printf("\n Introduce el ip: ");//mensaje para el usuario
+    fflush(stdin);//limpia el buffer de entrada para evitar errores en el manejo de información
+    scanf("%s",&ip);//recibe los datos en la memoria
+    strcpy(Usuario[LARGO].ip,ip);//da el valor del ip al usuario en la posicion pos
+    strcat(ip," ");//añade un espacio para ordenarlos de mejor forma
+
+    printf ("\n Introduce el puerto: " );//mensaje para el usuario
+    fflush(stdin);//limpia el buffer de entrada para evitar errores en el manejo de información
+    scanf("%s",&puerto);//recibe los datos en la memoria
+    strcpy(Usuario[LARGO].puerto,puerto);//da el valor del puerto al usuario en la posicion pos
+
+    printf ("\n Introduzca el nombre de usuario(Reconoce mayusculas): ");//mensaje para el usuario
+    fflush(stdin);//limpia el buffer de entrada para evitar errores en el manejo de información
+    scanf("%s",&usuario);//recibe los datos en la memoria
+    strcpy(Usuario[LARGO].nombre,usuario);//da el nombre de usuario al usuario en la posicion pos
+    strcat(usuario," ");//añade un espacio para ordenarlos de mejor forma
+
+    rayas;//conjunto de lineas que indica que el proceso actual ha finalizado
+
+    strcat (usuario,ip);//juntar los datos en una sola linea
+    strcat (usuario,puerto);//junta los datos en una sola linea
+    strcat(usuario,"\n"); //hace salt de linea en el archivo .txt
+    LARGO++;
+    fprintf (fp,usuario);//escribe los datos en el archivo txt
+
+    fclose ( fp );//cierra el archivo de texto para evitar errores
+
+    return 0;//retorna 0 si todos los procesos se completaron de forma correcta
+}
+
+int Validar_Usuario(int boolean, char* _usuario,char* _ip,char * _puerto){
+    FILE *file;//inicia el valor que contendrá el archivo
+    printf("Ingrese el nombre de contacto: ");//mensaje para el usuario
+    char palabra[50];
+    char* ptrpalabra;char* pos;
+    ptrpalabra=palabra;
+    fflush(stdin);//Limpia el buffer de entrada para evitar errores
+    scanf("%s",ptrpalabra);
+    printf("el usuario es: %s\n",ptrpalabra);
+    pos=ptrpalabra;
+    //variable donde se guardará el valor
+    file=fopen(ARCHIVO,"r");//abre el achivo de texto.
+    while(!feof(file)){//mientras el archivo no llegue al final
+        fflush(stdin);//Limpia el buffer de entrada para evitar errores
+        fscanf(file,"%s",_usuario);//lee la primera palabra en el archivo
+        printf("el usuario a comparar es: %s\n",_usuario);
+        ptrpalabra=pos;
+        while(((*ptrpalabra!= '\0')||(*_usuario!='\0'))&&(!strcmp(ptrpalabra,_usuario))){
+                if(!strcmp(ptrpalabra,_usuario)){
+                       // printf("los strings de la concha fueron %s y %s\n",ptrpalabra,_usuario);
+                        ptrpalabra++;
+                        _usuario++;
+                }
+        }
+        if((*ptrpalabra=='\0')&&(*_usuario=='\0')){
+
+            fflush(stdin);//Limpia el buffer de entrada para evitar errores
+            fscanf(file,"%s",_ip);// guarda el siguiente valor en el archivo en ip
+
+            fflush(stdin);//Limpia el buffer de entrada para evitar errores
+            fscanf(file,"%s",_puerto);break;//guarda el siguiente valor en el archivo en puerto
+           break;
+        }else{//si el valor no era el que se buscaba, pasa a la siguiente linea del archivo
+            fscanf(file,"%s",_usuario);fscanf(file,"%s",_usuario);}//se mueve a la siguiente linea para evitar errores
+    }
+    if(boolean){
+        printf("Nombre de contacto: %s\n",palabra);
+        printf("Numero de IP: %s\n",_ip);
+        printf("Numero de puerto: %s\n",_puerto);
+        rayas;//conjunto de lineas que indica que el proceso actual ha finalizado
+    }
+    fclose(file);//cierra el achivo
+    return 0;//retorna 0 si todo se realizó sin errores
+}
+
+
+void Leer_Archivo(){//Funcion que lee el archivo e ingresa su contenido en el struct
+    FILE *archivo;//variable que contrendra la posicion del archivo
+    archivo=fopen(ARCHIVO,"r");//abre el archivo para lectura
+    if(archivo==NULL){//si el archivo no existe
+        archivo=fopen(ARCHIVO,"a+");//se crea el archivo con nombre ARCHIVO
+    }
+    char palabra[100];//variable que guarda un archivo
+    while(!feof(archivo)){//mientras que no se llega al final del archivo
+        char o=getc(archivo);
+        if(o==EOF){
+            break;
+        }
+        fflush(stdin);//Se limpia el buffer de entrada para evitar errores
+        fscanf(archivo,"%s",palabra);//guarda el valor de %s en palabra
+        strcpy(Usuario[LARGO].nombre,palabra);//copia el cntenido de palabra en Usuario[LARGO]
+        fflush(stdin);//Se limpia el buffer de entrada para evitar errores
+        fscanf(archivo,"%s",palabra);//guarda el valor de %s en palabra
+        strcpy(Usuario[LARGO].ip,palabra);//copia el cntenido de palabra en Usuario[LARGO]
+        fflush(stdin);//Se limpia el buffer de entrada para evitar errores
+        fscanf(archivo,"%s",palabra);//guarda el valor de %s en palabra
+        strcpy(Usuario[LARGO].puerto,palabra);//copia el cntenido de palabra en Usuario[LARGO]
+        LARGO++;
+    }
+    printf("Los contactos fueron cargados con exito\n");
+    fclose(archivo);
+}
+
+//verifica si el mensaje es un adios para cerrar la conexion
+int salida(char msj[]){
+	char adios[]={'a','d','i','o','s'};
+	int i;					//variable para el for
+	for(i=0;i<5;i++){
+		if (msj[i]!=adios[i])
+			return 0;
+	}
+	return 1;
+}
+
+//Lee el mensaje para poder imprimirlo en pantalla
+int lee_msj(int accept){
+	int m;
+	char buffer[256];
+	char* scaneo;
+
+	m= read(accept, buffer, 255);
+	if (m<0) printf("error leyendo\n");
+	printf("\x1b[31m\n\n: %s\n\x1b[36m: ",buffer);
+	if (salida(buffer) == 1){	   
+	   return 1;
+	}
+   	return 0;
+}
+
+//Funcion que se encarga de la creacion de los sockets y el envio de mensajes, recibe el IP y puerto de un contacto
+sockets (char* IP, char* Porto) {
+	int conexion, conexion_verif;//verificador de conexion y variable para para el ciclo cuando esta intentando conectar
+	int servidor_socket;// Nombre del socket servidor
+	int cliente_socket;// Nombre del socket cliente
+	int flag_accept;//para la funcion accept
+	int pid, pid2;//para los fork
+	int Puerto_servidor, Puerto_cliente;//almacenaran los puertos de servidor y cliente
+	int temp, salir_chat;//temp es una variable temporal para escribir en el socket y salida_chat indica si es un adios 1 si lo es , 0 contrario.
+	char msj_enviar[256];//arreglo para los mensajes
+	//int n;		
+	struct sockaddr_in Direccion,Direccion_srv, cliente;//crea la estructura para contener las ip que se quieren atender 
+	struct hostent *servidor;//estructura para contener la ip del servidor
+	socklen_t Longitud_cliente;
+	pid=fork();
+
+	if (pid==0){ 	
+
+		//se crea el socket para el servidor
+		servidor_socket = socket(AF_INET, SOCK_STREAM,0);//crea el socket servidor
+		if (servidor_socket == -1) printf ("Error\n");
+		bzero((char *) &Direccion, sizeof(Direccion));
+		//crea el del bind del socket
+		Puerto_servidor=(5001);//puerto por el cual escuchara al servidor, se debe especificar directo en el código
+		Direccion.sin_family = AF_INET;//Toma el IP para el seridor
+		Direccion.sin_port = htons(Puerto_servidor);// indica el puerto por el cual va a escuchar
+		Direccion.sin_addr.s_addr = INADDR_ANY;//indica que atendera a cualquier ip que solicite el servicio
+		//hace el bind  del socket servidor_socket con las solicitudes que entren , -1 en caso de error
+		if (bind (servidor_socket, (struct sockaddr *) &Direccion, sizeof (Direccion))==-1)
+			printf("Error en el bind\n");
+		else printf("\nChat abierto\n\n");
+
+		if (listen(servidor_socket,10)==-1)//indica al servidor que empiece a escuchar por cleintes.
+			printf("error listening\n");
+			
+		Longitud_cliente = sizeof (cliente);//almacena la longitud del mensaje
+		while (1){
+
+			flag_accept = accept(servidor_socket, (struct sockaddr *) &cliente, &Longitud_cliente);
+			if (flag_accept<0)
+				printf("error en la aceptacion \n");
+			pid2=fork();
+			if (pid2<0)printf("error en el pid2 \n");
+			if (pid2==0){
+				close(servidor_socket);//cierra la copia del socket creado por el fork()
+				salir_chat=lee_msj(flag_accept);//verifica si el msj en el accept es un adios
+				if (salir_chat==1) break;
+					return 0;
+					exit(0);
+			}
+			else	close(flag_accept);			
+		}//fin del while
+		close(servidor_socket);//cierra el socket cliente
+		return 0;
+	}
+	else{
+	while(1){
+
+		Puerto_cliente =atoi(Porto);// este puerto es por el cual hara el conect
+		cliente_socket = socket (AF_INET, SOCK_STREAM, 0);//crea el socket cliente
+		if (cliente_socket == -1)
+			printf ("error creando el socket cliente\n");		
+		servidor = gethostbyname (IP);//crea la estructua que contiene la direccion ip del servidor 
+
+		if (servidor == NULL)
+			printf ("error en la direccion ip del servidor\n");		
+		bzero((char *) &Direccion_srv, sizeof(Direccion_srv));//reinicia la estructura Direccion_srv
+		Direccion_srv.sin_family = AF_INET;//indica que el socket servira en computadores diferentes
+		bcopy((char *)servidor	->h_addr, (char *)&Direccion_srv.sin_addr.s_addr,servidor->h_length);//asigna la direccion ip al socket
+		Direccion_srv.sin_port = htons(Puerto_cliente);//convierte el int Puerto_cliente en una estructura de puerto
+
+		conexion_verif=0;//indica si ya se establecio la conexion con el srv, 1 si ya lo logro, 0 de lo contrario
+		while(conexion_verif==0){//termina cuando conexion_verif sea = 1
+			conexion=connect (cliente_socket,(struct sockaddr *) &Direccion_srv, sizeof(Direccion_srv)) ;
+			if(conexion<0)printf(""); 
+			else {conexion_verif=1;//indica que hubo una conexion satisfactoria
+				printf("\x1b[36m\n: ");}
+		}
+		conexion_verif=0;
+		bzero(msj_enviar, 256);//borra el mensaje anterior
+		fgets(msj_enviar, 255, stdin);//funcion para leer del stdin el msj del usuario
+
+		//verifica si es adios
+		if(salida(msj_enviar)==1)
+			salir_chat=1;
+
+		temp=write(cliente_socket, msj_enviar, sizeof(msj_enviar));//escribe en el socket para enviar al servidor
+
+		if (temp<0) printf("error al escribir\n");
+
+		temp=read(cliente_socket, msj_enviar, 255);
+
+		if (salir_chat == 1) return 0;//condicion para del while
+	}
+	close(cliente_socket);//cierra el socket cliente
+	return 0;
+} 	
+		return cliente_socket;	//fin de la funcion socket
+}
+
+
+//Función para que el usuario indique que desea realizar, no recibe nada y en caso de querer usar el chat retorna 3, si desea salir retorna 0 en cualquier otro caso retorna 1
+int Menu(){
+    int opcion;rayas;
+    char USUARIO[50];//variables que guardaran informacion
+    char IP[50];//variables que guardaran informacion
+    char PUERTO[50];//variables que guardaran informacion
+    char* ptrUSUARIO;//punteros a dichas variables
+    char* ptrIP;//punteros a dichas variables
+    char* ptrPUERTO; //punteros a dichas variables
+    ptrUSUARIO=USUARIO;//se asigna cada puntero a cada variable
+    ptrIP=IP;//se asigna cada puntero a cada variable
+    ptrPUERTO=PUERTO;//se asigna cada puntero a cada variable
+    printf("Se encuentra en el menu del sistema\n");//mensaje para el usuario
+    printf("1- Agregar un nuevo contacto\n2- Busqueda de un contacto\n3- Enviar mensajes\n4- Imprimir Contactos\n0: Salir\n");rayas;
+    printf("\tIngrese la opcion a la que desea acceder: ");
+    scanf("\t%d",&opcion);//scanea la oopcion dada por el usuario
+    while((opcion<0)||(opcion>4)){
+        printf("Ingrese uno de los numeros establecidos: ");
+        scanf("\t%d",&opcion);
+    }rayas;
+    switch(opcion){//verifica cada opcion hasta que una se cumpla,ejecuta el codigo enterno y vuelve a preguntar
+        case 0:
+            return 0;//si el usuario indica 0, el menu se sale y termina el while
+            break;
+        case 1:
+            Agrega_Usuario();//si ejecuta 1, agrega un nuevo contacto a la lista
+            break;
+        case 2:
+            Validar_Usuario(0,ptrUSUARIO,ptrIP,ptrPUERTO);// Busca usuario y devuelve los datos de este
+            printf("Salio de validar usuario con exito\n");
+            printf("Actualmente el nombre es: %s\n",ptrUSUARIO);
+            printf("Actualmente el IP es: %s\n",ptrIP);
+            printf("Actualmente el puerto es: %s\n\n",ptrPUERTO);
+            break;
+        case 3:
+			return 3;// Retorna un 3 para entrar al chat
+            break;
+        case 4:
+			if(LARGO==0)printf("Usted no tiene contactos para imprimir\n");
+            else{
+            Imprime();}
+            break;
+    }
+    return 1;
+}

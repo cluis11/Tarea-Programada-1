@@ -10,9 +10,7 @@
 #define ARCHIVO "fichero.txt"
 #define rayas printf("---------------------------------------------------------\n");//macro que incluye un conjunto de lineas para separar los textos
 
-extern sockets (char* IP, char* Porto);
-extern int lee_msj(int accept);
-extern int salida(char msj[]);
+
 /*--------------------------------------------------------------------------
 Autores: Luis Eladio Castro
          Randall Jimenez

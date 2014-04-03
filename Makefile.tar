@@ -1,0 +1,7 @@
+all: Tarea
+
+CPPFLAGS = -g -I.
+
+Tarea : Tarea_Programada.c Sockets.c
+	cc -g -I. Tarea_Programada.c Sockets.c -o Tarea
+
